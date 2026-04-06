@@ -1,0 +1,17 @@
+Input (784)
+   ↓
+Fully Connected (784 → 256)
+   ↓
+ReLU
+   ↓
+Fully Connected (256 → 128)
+   ↓
+ReLU
+   ↓
+Fully Connected (128 → 10)
+   ↓
+Output (10 classes)
+
+Notes:
+- Main computation: MAC operations
+- Main cost: weights + activations
