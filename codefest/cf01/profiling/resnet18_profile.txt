@@ -1,0 +1,8 @@
+ResNet18 profiling output (CPU)
+
+Top operations:
+- convolution
+- batch_norm
+- relu
+
+Most computation happens in convolution layers.
