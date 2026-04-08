@@ -1,8 +1,16 @@
-ResNet18 profiling output (CPU)
+ResNet-18 profiling summary
 
-Top operations:
-- convolution
-- batch_norm
-- relu
+Top 5 MAC-intensive layers
+1. Conv2d: 3-42 | Output Shape: [1, 512, 7, 7] | Params: 2,359,296
+2. Conv2d: 3-46 | Output Shape: [1, 512, 7, 7] | Params: 2,359,296
+3. Conv2d: 3-49 | Output Shape: [1, 512, 7, 7] | Params: 2,359,296
+4. Conv2d: 3-39 | Output Shape: [1, 512, 7, 7] | Params: 1,179,648
+5. Conv2d: 3-29 | Output Shape: [1, 256, 14, 14] | Params: 589,824
 
-Most computation happens in convolution layers.
+Arithmetic intensity example
+Layer: Conv2d (3-42)
+MACs = 115,605,504
+FLOPs = 231,211,008
+Weights = 9,437,184 bytes
+Activations = 200,704 bytes
+AI = 231,211,008 / 9,637,888 ≈ 24 FLOP/byte
