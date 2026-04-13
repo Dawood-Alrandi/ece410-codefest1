@@ -1,22 +1,22 @@
 # Heilmeier Questions
 
-## 1. What are you trying to do?
-We are building a convolutional neural network (CNN) with manual backpropagation using NumPy. The goal is to understand how deep learning models work at a low level without using frameworks like PyTorch or TensorFlow.
+## Q1: What are you trying to do?
+I am trying to improve the performance of a convolutional neural network by accelerating the main bottleneck in the training process. From profiling results, the dominant kernel is the convolution data preparation step, specifically the `_im2col` function. This function is responsible for rearranging input data for convolution and is executed many times during training, making it a key target for optimization.
 
-## 2. How is it done today, and what are the limits?
-Today, most CNNs are implemented using high-level frameworks like PyTorch or TensorFlow. These tools automate backpropagation and optimization, but they hide the internal computations, making it harder to understand how the model actually works.
+## Q2: How is it done today and what are the limits?
+Currently, the CNN is implemented fully in software using NumPy. The `_im2col` function is written using Python loops, which makes it slow and inefficient. From the profiling results, the training function takes about 71.5% of total runtime, showing that the system is heavily bottlenecked. The arithmetic intensity of the kernel is about 1.06 FLOP/byte, which means the system is memory-bound. This limits performance because increasing compute power alone will not significantly improve speed.
 
-## 3. What is new in your approach?
-Our approach manually implements every step of the CNN, including forward pass and backward pass. This gives full visibility into convolution, pooling, activation, and gradient calculations.
+## Q3: What is new in your approach?
+My approach is to accelerate the `_im2col` kernel using hardware. By moving this computation to a dedicated hardware accelerator, I can reduce execution time and improve data movement efficiency. The roofline model shows that this kernel is limited by memory bandwidth, so the hardware design will focus on increasing data reuse and reducing memory traffic. This will allow the system to move closer to the compute roof and achieve higher performance compared to the current software-only implementation.
 
-## 4. Who cares? Why does it matter?
-This matters because understanding the internal operations of neural networks helps in designing better models and optimizing performance. It is especially useful for hardware acceleration and research.
+## Q4: Who cares?
+Improving the performance of CNN training is important for many real-world applications such as image recognition, AI systems, and embedded devices. Faster training allows for quicker model development and more efficient deployment, especially in systems with limited resources.
 
-## 5. What are the risks?
-The main risks are implementation errors and inefficiency compared to optimized frameworks. Manual implementation is also slower and harder to scale.
+## Q5: What are the risks?
+The main risks include the complexity of hardware design and ensuring that the accelerator has enough memory bandwidth to avoid becoming the new bottleneck. If not designed properly, the hardware may not provide significant performance improvements.
 
-## 6. How will you measure success?
-Success is measured by correctly running the model, producing expected outputs, and generating profiling results that identify computational bottlenecks.
+## Q6: How much will it cost?
+The cost depends on the hardware platform used, including FPGA or ASIC implementation. Additional costs include development time, testing, and integration with the existing software system.
 
-## 7. What are the next steps?
-Next steps include optimizing performance, improving accuracy, and exploring hardware acceleration techniques.
+## Q7: How long will it take?
+The project can be completed in phases, starting with profiling and analysis, followed by design and implementation of the hardware accelerator, and finally testing and optimization. A rough estimate would be several weeks depending on complexity.
