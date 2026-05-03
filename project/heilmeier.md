@@ -1,22 +1,13 @@
-# Heilmeier Questions
+# Heilmeier Catechism — Project (Updated with Profiling Data)
 
-## Q1: What are you trying to do?
-I am trying to improve the performance of a convolutional neural network by accelerating the main bottleneck in the training process. From profiling results, the dominant kernel is the convolution data preparation step, specifically the `_im2col` function. This function is responsible for rearranging input data for convolution and is executed many times during training, making it a key target for optimization.
+## Q1: What are you trying to do? Articulate your objectives using absolutely no jargon.
 
-## Q2: How is it done today and what are the limits?
-Currently, the CNN is implemented fully in software using NumPy. The `_im2col` function is written using Python loops, which makes it slow and inefficient. From the profiling results, the training function takes about 71.5% of total runtime, showing that the system is heavily bottlenecked. The arithmetic intensity of the kernel is about 1.06 FLOP/byte, which means the system is memory-bound. This limits performance because increasing compute power alone will not significantly improve speed.
+I am building a hardware accelerator chip for the most computationally expensive part of running a neural network: the convolution operation, which involves millions of multiply-accumulate (MAC) computations performed on images and learned filters. Running these networks on edge devices (cameras, phones, embedded sensors) is slow and energy-inefficient because general-purpose processors were not designed specifically for this repetitive, data-intensive computation. My goal is to design a dedicated hardware unit — an INT8 systolic array MAC accelerator — that performs this one operation far faster and with far less energy than a CPU.
 
-## Q3: What is new in your approach?
-My approach is to accelerate the `_im2col` kernel using hardware. By moving this computation to a dedicated hardware accelerator, I can reduce execution time and improve data movement efficiency. The roofline model shows that this kernel is limited by memory bandwidth, so the hardware design will focus on increasing data reuse and reducing memory traffic. This will allow the system to move closer to the compute roof and achieve higher performance compared to the current software-only implementation.
+## Q2: How is it done today, and what are the limits of the current approach?
 
-## Q4: Who cares?
-Improving the performance of CNN training is important for many real-world applications such as image recognition, AI systems, and embedded devices. Faster training allows for quicker model development and more efficient deployment, especially in systems with limited resources.
+Today, inference and training on edge devices relies on general-purpose CPUs or commercial AI chips. A profiling study of a CNN backpropagation implementation running on an Apple M1 CPU shows that `Conv2D._im2col` — the inner loop of convolution — consumes **69.6% of total runtime** (5.87 s out of 8.43 s, measured across 10 runs). The computed arithmetic intensity of this kernel is **1.74 FLOP/byte**, far below the M1's ridge point of 38.1 FLOP/byte. This means the CPU's compute units sit idle more than 95% of the time, waiting for data from memory. The Python interpreter adds further overhead on top. This is not a software optimization problem: even a perfectly optimized CPU implementation cannot overcome the fundamental mismatch between the memory access pattern of convolution and the CPU's memory hierarchy.
 
-## Q5: What are the risks?
-The main risks include the complexity of hardware design and ensuring that the accelerator has enough memory bandwidth to avoid becoming the new bottleneck. If not designed properly, the hardware may not provide significant performance improvements.
+## Q3: What is your approach, and why do you think it will work?
 
-## Q6: How much will it cost?
-The cost depends on the hardware platform used, including FPGA or ASIC implementation. Additional costs include development time, testing, and integration with the existing software system.
-
-## Q7: How long will it take?
-The project can be completed in phases, starting with profiling and analysis, followed by design and implementation of the hardware accelerator, and finally testing and optimization. A rough estimate would be several weeks depending on complexity.
+My approach is to implement a pipelined INT8 systolic array MAC accelerator in synthesizable SystemVerilog. Using INT8 fixed-point instead of FP64 reduces the per-element data width by 8×, directly cutting DRAM traffic and raising arithmetic intensity. Combined with tile-based shared-memory access (tile size T=8), the effective arithmetic intensity rises from 1.74 FlOP/byte to approximately 25 FLOP/byte — pushing the dominant kernel above the accelerator's ridge point (15.6 FLOP/byte with HBM) and into the compute-bound regime. The roofline model (`roofline_project.png`) shows the software kernel deep in the memory-bound region and the hypothetical hardware design point above the HW ridge point, confirming that the proposed architecture fundamentally changes the performance bottleneck. This approach is proven at industrial scale (Google TPU) and is implementable at research scale using open-source tools (Yosys, Icarus Verilog, cocotb).
