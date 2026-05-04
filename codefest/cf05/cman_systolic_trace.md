@@ -1,5 +1,5 @@
 # CMAN — 2×2 Weight-Stationary Systolic Array Trace
-ECE 410/510 Codefest 5 — HW4AI Spring 2026
+ECE 410/510 Codefest 5 HW4 Spring 2026
 
 **Given:** A = [[1, 2], [3, 4]], B = [[5, 6], [7, 8]], expected C = [[19, 22], [43, 50]]
 
