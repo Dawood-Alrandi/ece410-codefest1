@@ -1,0 +1,9 @@
+VCD info: dumpfile sim/compute_core_run.log.vcd opened for output.
+--- Feeding representative input vector (9 MACs) ---
+acc_out  = 19
+expected = 19
+PASS: acc_out matches expected value of 19
+PASS: reset cleared acc_out to 0
+PASS: negative accumulation correct (acc_out=-30)
+
+PASS: All compute_core tests passed.
