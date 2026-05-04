@@ -1,0 +1,10 @@
+VCD info: dumpfile sim/interface_run.log.vcd opened for output.
+--- Write transaction 1: a=5, b=3 ---
+--- Write transaction 2: a=2, b=4 ---
+--- Read transaction: expect acc=23 ---
+PASS: read acc_out=23 (expected 23)
+--- Write reset transaction ---
+--- Read transaction after reset: expect 0 ---
+PASS: acc_out=0 after reset
+
+PASS: All interface tests passed.
