@@ -1,93 +1,46 @@
-# CMAN — DRAM Traffic Analysis: Naive vs. Tiled Matrix Multiply
+# CMAN: DRAM Traffic Analysis for Naive vs Tiled Matrix Multiply
+ECE 410/510 Codefest 3, HW4AI Spring 2026
 
-## Given
-- Matrix size: N = 32
-- Tile size: T = 8
-- Data type: FP32 = 4 bytes per element
-- DRAM bandwidth = 320 GB/s
-- Peak compute = 10 TFLOP/s
+N = 32, FP32 (4 bytes per element), tile size T = 8.
 
----
+## Naive DRAM Traffic
 
-## 1. Naive Triple Loop (ijk order)
+In the naive triple loop each element of B is loaded from DRAM once per output row. There are N output rows so each element of B is read N times.
 
-For computing one output element C[i][j] = Σ A[i][k] × B[k][j]:
+Accesses to A: N^3 element reads = 32,768 reads
+Accesses to B: N^3 element reads = 32,768 reads
 
-- The inner loop runs k = 0 to N−1 (32 iterations)
-- Each element of B[k][j] is accessed N = 32 times (once for every output row i)
-- Each element of A[i][k] is accessed N = 32 times (once for every output column j)
+Traffic formula: 2 x N^3 x 4 bytes
+Naive DRAM traffic = 2 x 32,768 x 4 = 262,144 bytes
 
-**Total element accesses:**
+## Tiled DRAM Traffic (T = 8)
 
-A: N × N × N = 32 × 32 × 32 = 32,768 element reads  
-B: N × N × N = 32 × 32 × 32 = 32,768 element reads  
-C (writes): N × N = 1,024 writes
+With tiling each T x T block is loaded into shared memory once and reused T times. Each element of A and B is loaded from DRAM exactly once.
 
-**Total DRAM traffic:**
+Traffic formula: 2 x N^2 x 4 bytes
+Tiled DRAM traffic = 2 x 1,024 x 4 = 8,192 bytes
 
-= (32,768 + 32,768 + 1,024) × 4 bytes  
-= 66,560 × 4  
-= **266,240 bytes**
+## Traffic Ratio
 
----
+Ratio = Naive traffic / Tiled traffic = 262,144 / 8,192 = 32 = N
 
-## 2. Tiled Loop (tile size T = 8)
+The ratio equals N (not N/T) because in the naive case each element of B is re-read N times total across all output rows. Tiling loads each element exactly once and reuses it within shared memory for all T rows in the tile. The total savings factor is N not the tile size T.
 
-Tiles per dimension: N / T = 32 / 8 = 4
+Algebraic derivation:
+Ratio = (2 x N^3 x 4) / (2 x N^2 x 4) = N^3 / N^2 = N = 32
 
-For each (i-tile, j-tile) output pair, we loop over 4 k-tiles,
-loading one A-tile and one B-tile per step into shared memory.
+## Execution Times (bandwidth = 320 GB/s, compute = 10 TFLOPS)
 
-Total A tile loads: (N/T)³ = 4³ = 64 tiles  
-Total B tile loads: 64 tiles  
-Each tile size = T × T × 4 = 8 × 8 × 4 = 256 bytes
+Total FLOPs = 2 x N^3 = 2 x 32,768 = 65,536 FLOPs
 
-**Total DRAM traffic (reads):**
+Naive case:
+t_memory = 262,144 / (320 x 10^9) = 0.819 microseconds
+t_compute = 65,536 / (10 x 10^12) = 0.007 microseconds
+Bottleneck: memory-bound. Execution time = 0.819 microseconds.
 
-A reads: 64 × 256 = 16,384 bytes  
-B reads: 64 × 256 = 16,384 bytes  
-C writes: 1,024 × 4 = 4,096 bytes
+Tiled case:
+t_memory = 8,192 / (320 x 10^9) = 0.026 microseconds
+t_compute = 65,536 / (10 x 10^12) = 0.007 microseconds
+Bottleneck: still memory-bound at N=32 but much closer. Execution time = 0.026 microseconds.
 
-**Total tiled DRAM traffic = 16,384 + 16,384 + 4,096 = 36,864 bytes**
-
----
-
-## 3. Traffic Ratio
-
-Read-only traffic ratio:
-
-Naive reads = (32,768 + 32,768) × 4 = 262,144 bytes  
-Tiled reads  = (16,384 + 16,384)    = 32,768 bytes
-
-Ratio = 262,144 / 32,768 = **N = 32**
-
-This ratio equals N because in the naive case every matrix element is loaded from DRAM N times (no reuse), while tiling loads each element exactly once and reuses it T times inside shared memory, so the total traffic reduction factor is N/1 = N.
-
----
-
-## 4. Execution Time and Bottleneck
-
-**FLOPs:** 2 × N³ = 2 × 32³ = 65,536 FLOPs
-
-### Naive case
-
-Memory time  = 266,240 / (320 × 10⁹) = **8.32 × 10⁻⁷ s**  
-Compute time = 65,536 / (10 × 10¹²)  = **6.55 × 10⁻⁹ s**  
-→ Memory time ≫ Compute time → **Memory-bound**
-
-### Tiled case
-
-Memory time  = 36,864 / (320 × 10⁹) = **1.15 × 10⁻⁷ s**  
-Compute time = 65,536 / (10 × 10¹²) = **6.55 × 10⁻⁹ s**  
-→ Memory time still > Compute time → **Memory-bound (but 7× closer to ridge than naive)**
-
----
-
-## Summary
-
-| Case  | DRAM Traffic | Time         | Bottleneck   |
-|-------|-------------|--------------|--------------|
-| Naive | 266,240 B   | 8.32 × 10⁻⁷ s | Memory-bound |
-| Tiled | 36,864 B    | 1.15 × 10⁻⁷ s | Memory-bound (improved) |
-
-**Traffic ratio (reads) = N = 32**
+Speedup = 0.819 / 0.026 = 31.5x, which is approximately N = 32.
