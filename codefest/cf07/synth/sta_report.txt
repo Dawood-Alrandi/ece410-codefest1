@@ -1,0 +1,31 @@
+Static Timing Analysis Report
+Design   : crossbar_mac
+Tool     : OpenSTA 2.6.0
+Corner   : tt_025C_1v80 (typical process, 25C, 1.8V)
+
+Setup Analysis:
+  Clock period : 10.000 ns
+  WNS          : -0.230 ns
+  TNS          : -0.230 ns
+  Failing paths: 1
+
+Hold Analysis:
+  WNS (hold)   : -0.050 ns
+  TNS (hold)   : -0.050 ns
+  Failing paths: 1 (reset path)
+
+Worst Setup Path:
+  Startpoint : weight_reg[3][3]/Q (DFXTP_1, clocked by clk)
+  Endpoint   : out_reg[3][31]/D  (DFXTP_1, clocked by clk)
+
+  Gate delays:
+    weight_reg[3][3]/Q to AND2_1 A        : 0.41 ns
+    AND2_1 Z through 3 gate chain         : 1.23 ns
+    AND2_1 Z to ADDF_1 A                  : 0.38 ns
+    ADDF_1 SUM through 3 adder stages     : 4.86 ns
+    ADDF_1 SUM to DFXTP_1 D              : 0.31 ns
+    DFXTP_1 setup time (from library)     : 0.61 ns
+    Wire delays (estimated)               : 2.43 ns
+    Total path delay                      : 10.23 ns
+    Required time                         : 10.00 ns
+    Slack                                 : -0.23 ns [FAIL]

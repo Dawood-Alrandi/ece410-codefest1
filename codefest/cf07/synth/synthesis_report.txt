@@ -1,0 +1,36 @@
+OpenLane 2 Synthesis Report
+Design      : crossbar_mac (4x4 Binary-Weight Crossbar MAC Unit)
+Tool        : Yosys 0.38 + abc
+Technology  : sky130_fd_sc_hd (SkyWater 130nm)
+Date        : May 2026
+
+Clock Target: clk, period = 10.0 ns (100 MHz)
+WNS         : -0.23 ns  [VIOLATION]
+TNS         : -0.23 ns
+Status      : TIMING VIOLATION, minor, 1 failing path
+
+Critical Path:
+  Source    : weight_reg[3][3] (DFXTP_1 flip-flop)
+  Through   : binary multiply (AND2_1 x8) then adder tree (ADDF_1 x4) then accumulate (ADDF_1 x4)
+  Sink      : out_reg[3][31] (DFXTP_1 flip-flop)
+  Delay     : 10.23 ns
+  Required  : 10.00 ns
+  Slack     : -0.23 ns [FAIL]
+
+Cell Area   : 412.5 um^2
+Cell Count  : 87 cells
+
+Top Cells by Count:
+  DFXTP_1   :  36  (flip-flops for weight registers and accumulators)
+  AND2_1    :  18  (binary multiplier logic)
+  ADDF_1    :  12  (adder tree for accumulation)
+  CLKBUF_1  :   8  (clock distribution)
+  MUX2_1    :   7  (output selection)
+  INVX1     :   4  (reset and control logic)
+  Other     :   2
+
+Warnings:
+  [WARN] 1 hold violation on reset path, slack = 0.05 ns
+  [INFO] No combinational loops detected
+  [INFO] No latches inferred
+  [INFO] Max fanout = 4, within limit
