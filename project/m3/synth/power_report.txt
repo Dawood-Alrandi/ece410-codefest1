@@ -1,0 +1,21 @@
+Power Estimation Report
+Design: top
+Tool: OpenLane 2 / OpenSTA power analysis
+Corner: tt_025C_1v80
+
+Power breakdown:
+  Internal power  : 0.000094 W  (53.7%)
+  Switching power : 0.000081 W  (46.3%)
+  Leakage power   : 7.1e-10  W  (negligible)
+  Total power     : 0.000175 W  = 0.175 mW
+
+Activity assumptions:
+  Clock frequency : 100 MHz
+  Toggle rate     : 10% (default assumption)
+  Input activity  : 10%
+
+Dominant power consumer: DFXTP_1 flip-flops (44 instances, clock switching)
+Second: ADDF_1 full adders (switching during accumulation)
+
+Note: power estimation used default toggle rates. Actual power depends on
+real input activity. For M4 we will measure with workload-realistic toggle rates.

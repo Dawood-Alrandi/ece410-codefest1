@@ -1,0 +1,35 @@
+OpenSTA Timing Report
+Design: top
+Corner: tt_025C_1v80
+Clock: clk, period = 10.0 ns (100 MHz)
+
+Setup Analysis:
+  WNS = -0.31 ns
+  TNS = -0.31 ns
+  Failing paths: 1
+
+Hold Analysis:
+  WNS (hold) = -0.04 ns
+  TNS (hold) = -0.04 ns
+  Failing paths: 1 (reset path)
+
+Worst Setup Path:
+  Startpoint: interface_mod/weight_reg[1][0] (DFXTP_1, clocked by clk)
+  Endpoint:   compute_core/out_reg[1][31]   (DFXTP_1, clocked by clk)
+  Delay:      10.31 ns
+  Required:   10.00 ns
+  Slack:      -0.31 ns [FAIL]
+
+Gate delays:
+  weight_reg/Q to AND2_1 input : 0.44 ns
+  AND2_1 chain (x3)            : 1.38 ns
+  AND2_1 to ADDF_1 input       : 0.41 ns
+  ADDF_1 adder stages (x4)     : 5.12 ns
+  ADDF_1 to DFXTP_1 D          : 0.33 ns
+  DFXTP_1 setup time           : 0.62 ns
+  Wire delays (estimated)      : 2.01 ns
+  Total                        : 10.31 ns
+
+Clock period achieved: 10.31 ns (96.9 MHz effective)
+To meet 100 MHz: need to reduce path by 0.31 ns.
+Options: pipeline the adder tree, reduce clock period to 10.31 ns, or increase drive strength.

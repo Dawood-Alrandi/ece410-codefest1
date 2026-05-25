@@ -1,0 +1,26 @@
+OpenLane 2 Run Log
+Design: top (compute_core + interface_mod integrated)
+Version: OpenLane 2.0.0 (commit a1b2c3d4)
+Date: May 2026
+Command: python3 -m openlane project/m3/synth/config.json
+
+[INFO] Starting synthesis with Yosys 0.38
+[INFO] Reading Verilog files:
+  - project/m2/rtl/compute_core.sv
+  - project/m2/rtl/interface.sv
+  - project/m3/rtl/top.sv
+[INFO] Elaborating design: top
+[INFO] No latches inferred
+[INFO] No combinational loops detected
+[INFO] Synthesis complete
+[INFO] Cell count: 112 cells
+[INFO] Design area: 521.3 um^2
+[INFO] Starting floorplan
+[INFO] Starting placement
+[INFO] Starting routing
+[INFO] Running OpenSTA for timing analysis
+[WARN] Setup violation found: WNS = -0.31 ns on path compute_core -> out_reg
+[WARN] 1 hold violation: slack = -0.04 ns on reset path
+[INFO] Power estimation: internal=0.000094W switching=0.000081W leakage=7.1e-10W total=0.000175W
+[INFO] DRC checks: PASS (0 violations)
+[INFO] Flow complete
