@@ -1,0 +1,19 @@
+Area Report Final
+Design: top
+Technology: sky130_fd_sc_hd
+Total cell area: 521.3 um^2
+Total cell count: 112 cells
+
+Cell breakdown:
+  DFXTP_1  : 44  (flip-flops)
+  AND2_1   : 22  (multiply logic)
+  ADDF_1   : 15  (adder tree)
+  CLKBUF_1 : 10  (clock)
+  MUX2_1   :  9  (output selection)
+  INVX1    :  6  (control)
+  Other    :  6
+
+Module breakdown:
+  compute_core  : 412.5 um^2  (79.1%)
+  interface_mod : 108.8 um^2  (20.9%)
+  top (wrapper) :   0.0 um^2

@@ -1,0 +1,17 @@
+OpenLane 2 Final Run Log
+Design: top (compute_core + interface_mod)
+Version: OpenLane 2.0.0
+Date: June 2026
+
+[INFO] Reading Verilog files: compute_core.sv, interface.sv, top.sv
+[INFO] No latches inferred
+[INFO] No combinational loops detected
+[INFO] Synthesis complete
+[INFO] Cell count: 112 cells
+[INFO] Design area: 521.3 um^2
+[INFO] Clock period: 10.0 ns (100 MHz)
+[WARN] Setup violation: WNS = -0.31 ns on compute path
+[WARN] Hold violation: slack = -0.04 ns on reset path
+[INFO] Power estimation complete: 0.175 mW total
+[INFO] DRC: PASS
+[INFO] Flow complete

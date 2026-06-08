@@ -1,0 +1,23 @@
+OpenSTA Final Timing Report
+Design: top
+Corner: tt_025C_1v80
+Clock: clk, period = 10.0 ns (100 MHz)
+
+Setup Analysis:
+  WNS = -0.31 ns
+  TNS = -0.31 ns
+  Failing paths: 1
+
+Hold Analysis:
+  WNS (hold) = -0.04 ns
+  Failing paths: 1 (reset path)
+
+Worst Setup Path:
+  Startpoint: interface_mod/weight_reg[1][0] (DFXTP_1)
+  Endpoint: compute_core/out_reg[1][31] (DFXTP_1)
+  Total delay: 10.31 ns
+  Required: 10.00 ns
+  Slack: -0.31 ns [FAIL]
+
+Effective clock: 96.9 MHz (10.31 ns period)
+Fix: pipeline adder tree or lower clock to 97 MHz

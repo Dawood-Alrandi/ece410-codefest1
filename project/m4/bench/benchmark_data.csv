@@ -1,0 +1,11 @@
+metric,sw_baseline_m1,hw_accelerator_m4,unit,method
+execution_time_ms,8.43,2.35,ms,projected
+throughput_gflops,27800,0.1,GFLOP/s,projected
+clock_freq_mhz,N/A,96.9,MHz,from_synthesis
+macs_per_cycle,N/A,1,MACs/cycle,from_RTL
+power_w,10.0,0.000175,W,sw_measured_hw_synthesis
+energy_per_mac_pj,N/A,1.75,pJ/MAC,projected
+cell_area_um2,N/A,521.3,um^2,from_synthesis
+cell_count,N/A,112,cells,from_synthesis
+wns_ns,N/A,-0.31,ns,from_synthesis
+speedup_vs_baseline,1.0,0.0000036,ratio,projected

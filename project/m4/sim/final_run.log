@@ -1,0 +1,9 @@
+VCD info: dumpfile final_run.vcd opened for output.
+--- Host write: a=5, b=3 via interface ---
+--- Host write: a=2, b=4 via interface ---
+--- Host read: acc_out via interface ---
+rd_data = 23 (expected 23)
+PASS: end-to-end co-simulation result matches expected value of 23
+--- Host write: reset via interface ---
+PASS: reset via interface cleared accumulator to 0
+PASS: All end-to-end co-simulation tests passed.

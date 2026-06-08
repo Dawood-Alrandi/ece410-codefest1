@@ -1,0 +1,12 @@
+Power Report Final
+Design: top
+Corner: tt_025C_1v80
+
+Internal power  : 0.000094 W
+Switching power : 0.000081 W
+Leakage power   : 7.1e-10 W
+Total power     : 0.000175 W = 0.175 mW
+
+Dominant: DFXTP_1 flip-flops (clock switching)
+Activity: 10% toggle rate (default)
+Note: M4 uses default toggle rates. Real workload rates would lower this estimate.
